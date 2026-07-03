@@ -1141,7 +1141,17 @@ const reservationForm = document.getElementById("reservationForm");
 const reservationSubmitBtn = document.getElementById("reservationSubmitBtn");
 
 if (reservationSubmitBtn) {
-  
+  reservationForm.addEventListener("submit", function (e) {
+    const name=document.getElementById("resName").value.trim();
+    const phone=document.getElementById("resPhone").value.trim();
+    const dateRaw=document.getElementById("resDate").value;
+    const guests=document.getElementById("resGuests").value.trim();
+    if(!name||!phone||!dateRaw||!guests){e.preventDefault();alert("Uzupełnij wszystkie wymagane pola.");return;}
+    const sel=new Date(dateRaw); const today=new Date(); today.setHours(0,0,0,0);
+    if(sel<today){e.preventDefault();alert("Nie można dokonać rezerwacji w przeszłości.");return;}
+    reservationSubmitBtn.textContent="Wysyłanie...";
+    reservationSubmitBtn.disabled=true;
+  });
 }
 </script>
 </body>
