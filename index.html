@@ -798,7 +798,13 @@
     <div class="divider"></div>
     <p style="margin-top:18px;">Wypełnij formularz, a my potwierdzimy rezerwację najszybciej jak to możliwe.</p>
   </div>
-  <form class="reservation-form reveal" id="reservationForm">
+  <form class="reservation-form reveal" id="reservationForm"
+        action="https://formsubmit.co/sindjoe300@gmail.com"
+        method="POST">
+    <input type="hidden" name="_subject" value="Nowa rezerwacja stolika — Las Radomsko">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="about:blank">
     <div class="form-row">
       <div class="form-field">
         <label for="resName">Imię i nazwisko</label>
@@ -823,8 +829,8 @@
       <label for="resNotes">Dodatkowe uwagi (opcjonalnie)</label>
       <textarea id="resNotes" name="resNotes" rows="4" placeholder="np. stolik przy oknie, alergie, okazja specjalna..."></textarea>
     </div>
-    <button type="submit" class="btn btn-gold form-submit">Wyślij rezerwację</button>
-    <p class="form-note">Po kliknięciu otworzy się Twój program pocztowy z gotową wiadomością do wysłania na adres restauracji.</p>
+    <button type="submit" class="btn btn-gold form-submit" id="reservationSubmitBtn">Wyślij rezerwację</button>
+    <p class="form-note" id="reservationMsg"></p>
     <div class="form-divider"><span>lub</span></div>
     <a href="tel:+48577653000" class="btn btn-ghost form-call-btn">Zadzwoń, by zarezerwować</a>
   </form>
@@ -1132,74 +1138,19 @@ if (resPhoneInput) {
 }
 
 const reservationForm = document.getElementById("reservationForm");
-if (reservationForm) {
-  reservationForm.addEventListener("submit", async function (e) {
-    e.preventDefault();
+const reservationSubmitBtn = document.getElementById("reservationSubmitBtn");
 
-    const name = document.getElementById("resName").value.trim();
-    const phone = document.getElementById("resPhone").value.trim();
-    const dateRaw = document.getElementById("resDate").value;
-    const guests = document.getElementById("resGuests").value.trim();
-    const notes = document.getElementById("resNotes").value.trim();
-
-    if (dateRaw && new Date(dateRaw) < new Date()) {
-      alert("Nie można dokonać rezerwacji w przeszłości. Wybierz prawidłową datę i godzinę.");
-      return;
-    }
-
-    let dateFormatted = dateRaw;
-    if (dateRaw) {
-      const d = new Date(dateRaw);
-      dateFormatted = d.toLocaleString("pl-PL", {
-        day: "2-digit", month: "2-digit", year: "numeric",
-        hour: "2-digit", minute: "2-digit"
-      });
-    }
-
-    const submitBtn = reservationForm.querySelector(".form-submit");
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = "Wysyłanie...";
-    submitBtn.disabled = true;
-
-    const cfg = window._emailjsConfig;
-    const isConfigured = cfg.publicKey !== "TWÓJ_PUBLIC_KEY";
-
-    if (isConfigured) {
-      try {
-        await emailjs.send(cfg.serviceId, cfg.templateId, {
-          from_name: name,
-          phone: phone,
-          reservation_date: dateFormatted,
-          guests: guests,
-          notes: notes || "brak",
-          reply_to: "",
-        });
-        submitBtn.textContent = "✓ Wysłano!";
-        submitBtn.style.background = "#5a8c5a";
-        reservationForm.reset();
-        setTimeout(() => {
-          submitBtn.textContent = originalText;
-          submitBtn.style.background = "";
-          submitBtn.disabled = false;
-        }, 4000);
-      } catch (err) {
-        alert("Nie udało się wysłać wiadomości. Skontaktuj się telefonicznie: 577 653 000");
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-      }
-    } else {
-      // Fallback: otwórz klienta pocztowego
-      const subject = `Rezerwacja stolika — ${name}`;
-      const body = `Imię i nazwisko: ${name}\nNumer telefonu: ${phone}\nData rezerwacji: ${dateFormatted}\nLiczba osób: ${guests}\nDodatkowe uwagi: ${notes || "brak"}`;
-      const a = document.createElement('a');
-      a.href = `mailto:kontakt@lasradomsko.pl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-    }
+if (reservationSubmitBtn) {
+  reservationForm.addEventListener("submit", function (e) {
+    const name=document.getElementById("resName").value.trim();
+    const phone=document.getElementById("resPhone").value.trim();
+    const dateRaw=document.getElementById("resDate").value;
+    const guests=document.getElementById("resGuests").value.trim();
+    if(!name||!phone||!dateRaw||!guests){e.preventDefault();alert("Uzupełnij wszystkie wymagane pola.");return;}
+    const sel=new Date(dateRaw); const today=new Date(); today.setHours(0,0,0,0);
+    if(sel<today){e.preventDefault();alert("Nie można dokonać rezerwacji w przeszłości.");return;}
+    reservationSubmitBtn.textContent="Wysyłanie...";
+    reservationSubmitBtn.disabled=true;
   });
 }
 </script>
