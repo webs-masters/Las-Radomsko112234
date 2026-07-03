@@ -829,7 +829,7 @@
       <label for="resNotes">Dodatkowe uwagi (opcjonalnie)</label>
       <textarea id="resNotes" name="resNotes" rows="4" placeholder="np. stolik przy oknie, alergie, okazja specjalna..."></textarea>
     </div>
-    <button type="button" class="btn btn-gold form-submit" id="reservationSubmitBtn">Wyślij rezerwację</button>
+    <button type="submit" class="btn btn-gold form-submit" id="reservationSubmitBtn">Wyślij rezerwację</button>
     <p class="form-note" id="reservationMsg"></p>
     <div class="form-divider"><span>lub</span></div>
     <a href="tel:+48577653000" class="btn btn-ghost form-call-btn">Zadzwoń, by zarezerwować</a>
@@ -1141,26 +1141,7 @@ const reservationForm = document.getElementById("reservationForm");
 const reservationSubmitBtn = document.getElementById("reservationSubmitBtn");
 
 if (reservationSubmitBtn) {
-  reservationSubmitBtn.addEventListener("click", function () {
-    const name    = document.getElementById("resName").value.trim();
-    const phone   = document.getElementById("resPhone").value.trim();
-    const dateRaw = document.getElementById("resDate").value;
-    const guests  = document.getElementById("resGuests").value.trim();
-
-    if (!name || !phone || !dateRaw || !guests) {
-      alert("Uzupełnij wszystkie wymagane pola.");
-      return;
-    }
-    if (new Date(dateRaw) < new Date()) {
-      alert("Nie można dokonać rezerwacji w przeszłości. Wybierz prawidłową datę i godzinę.");
-      return;
-    }
-
-    reservationSubmitBtn.textContent = "Wysyłanie...";
-    reservationSubmitBtn.disabled = true;
-
-    reservationForm.submit();
-  });
+  
 }
 </script>
 </body>
