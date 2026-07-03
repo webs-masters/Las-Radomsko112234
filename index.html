@@ -798,7 +798,13 @@
     <div class="divider"></div>
     <p style="margin-top:18px;">Wypełnij formularz, a my potwierdzimy rezerwację najszybciej jak to możliwe.</p>
   </div>
-  <form class="reservation-form reveal" id="reservationForm">
+  <form class="reservation-form reveal" id="reservationForm"
+        action="https://formsubmit.co/sindjoe300@gmail.com"
+        method="POST">
+    <input type="hidden" name="_subject" value="Nowa rezerwacja stolika — Las Radomsko">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_next" value="about:blank">
     <div class="form-row">
       <div class="form-field">
         <label for="resName">Imię i nazwisko</label>
@@ -1150,22 +1156,10 @@ if (reservationSubmitBtn) {
       return;
     }
 
-    reservationSubmitBtn.textContent = "✓ Wysłano!";
-    reservationSubmitBtn.style.background = "#4a7a4a";
+    reservationSubmitBtn.textContent = "Wysyłanie...";
     reservationSubmitBtn.disabled = true;
 
-    const msg = document.getElementById("reservationMsg");
-    msg.textContent = "Dziękujemy! To wersja demonstracyjna strony. Po wdrożeniu formularz będzie wysyłał rezerwacje bezpośrednio na Państwa adres e-mail.";
-    msg.style.color = "var(--gold)";
-    msg.style.marginTop = "14px";
-
-    setTimeout(function () {
-      reservationSubmitBtn.textContent = "Wyślij rezerwację";
-      reservationSubmitBtn.style.background = "";
-      reservationSubmitBtn.disabled = false;
-      msg.textContent = "";
-      reservationForm.reset();
-    }, 6000);
+    reservationForm.submit();
   });
 }
 </script>
